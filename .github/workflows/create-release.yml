@@ -29,3 +29,4 @@ jobs:
         release_name: github.GITHUB_REF
         # `true` to create a draft (unpublished) release, `false` to create a published one. Default: `false`
         draft: true
+        token: ${{ secrets.GITHUB_TOKEN }}
