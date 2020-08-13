@@ -12,6 +12,19 @@ jobs:
       url: ${{ steps.build.outputs.url }}
     steps:
     - uses: actions/checkout@v2
+
+    - name: Set build number
+      shell: pwsh
+      run: |
+        if (${{ github.ref }} -match 'refs/tags/v(.+)') {
+          Set-Variable -Name build_version -Value "${matches[1]}.${{ github.run_number }}"
+        } else {
+          Set-Variable -Name version -Value (Get-Content -Path ./version)
+          Set-Variable -Name build_version -Value "${version}.${{ github.run_number }}"
+        }
+        # must also set as env var for the real build
+        echo ${build_version}
+        echo "::set-output name=buildVersion::${build_version}"
       
     - name: Run "build"
       id: build
@@ -25,7 +38,7 @@ jobs:
         path: ./README-copy.md
 
   create-release:
-    if: contains(github.event.ref, 'refs/tags') 
+    if: contains(github.ref, 'refs/tags') 
     runs-on: ubuntu-latest
     needs: [build]
     steps:
@@ -56,3 +69,25 @@ jobs:
         asset_path: ./README-copy.md
         asset_name: README.md
         asset_content_type: application/octet-stream
+        
+  bump-master-version:
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    steps:
+      - uses: actions/checkout@v2.3.2
+        with:
+          ref: 'refs/heads/master'
+      - name: Bump version file
+        shell: pwsh
+        run: |
+          $v = [System.Version]::Parse($(Get-Content -Path ./VERSION))
+          $v = New-Object System.Version($v.Major, ($v.Minor + 1), $v.Build)
+          $v = $v.ToString()
+          Set-Content -Path ./VERSION -Value $v
+          git commit -m "Bump version to ${v}" -a
+          
+      - name: GitHub Push
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}         
