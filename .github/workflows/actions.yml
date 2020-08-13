@@ -71,6 +71,7 @@ jobs:
         asset_content_type: application/octet-stream
         
   bump-master-version:
+    if: endsWith(github.ref, '.0') # we want to bump master only on release in vX.Y.0 format and not for hotfixes in vX.Y.1, vX.Y.2 etc. format
     runs-on: ubuntu-latest
     needs: [create-release]
     steps:
