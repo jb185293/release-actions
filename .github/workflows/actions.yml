@@ -16,7 +16,7 @@ jobs:
     - name: Set build number
       shell: pwsh
       run: |
-        if (${{ github.ref }} -match 'refs/tags/v(.+)') {
+        if ('${{ github.ref }}' -match 'refs/tags/v(.+)') {
           Set-Variable -Name build_version -Value "${matches[1]}.${{ github.run_number }}"
         } else {
           Set-Variable -Name version -Value (Get-Content -Path ./version)
