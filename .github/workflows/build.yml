@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     
     outputs:
-      url: ${{ steps.build.output.url }}
+      url: ${{ steps.build.outputs.url }}
 
     steps:
     - uses: actions/checkout@v2
