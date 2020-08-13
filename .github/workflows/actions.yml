@@ -78,16 +78,16 @@ jobs:
         with:
           ref: 'refs/heads/master'
       - name: Bump version file
+        id: bump
         shell: pwsh
         run: |
           $v = [System.Version]::Parse($(Get-Content -Path ./VERSION))
           $v = New-Object System.Version($v.Major, ($v.Minor + 1), $v.Build)
           $v = $v.ToString()
           Set-Content -Path ./VERSION -Value $v
-          git commit -m "Bump version to ${v}" -a
+          echo "::set-output name=version::${v}"
           
-      - name: GitHub Push
-        uses: ad-m/github-push-action@v0.6.0
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v4.4.0
         with:
-          # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}         
+          commit_message: Bump version file to ${{ steps.bump.outputs.version }}
