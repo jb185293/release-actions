@@ -18,3 +18,10 @@ jobs:
     - name: Run "build"
       id: build
       run: echo "::set-output name=url::https://example.com"
+      
+  test-output:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - run: echo ${{ needs.build.outputs.url }}
+    
