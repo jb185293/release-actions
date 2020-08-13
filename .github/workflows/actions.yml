@@ -17,12 +17,12 @@ jobs:
       id: build
       run: echo "::set-output name=url::https://example.com"
       
-    - run: cat ./readme.md > readme-copy.md
+    - run: cat ./README.md > README-copy.md
       
     - uses: actions/upload-artifact@v2
       with:
         name: readme-artifact
-        path: ./readme-copy.md
+        path: ./README-copy.md
 
   create-release:
     if: contains(github.event.ref, 'refs/tags') 
@@ -53,6 +53,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./readme-copy.md
-        asset_name: readme.md
+        asset_path: ./README-copy.md
+        asset_name: README.md
         asset_content_type: application/octet-stream
