@@ -19,7 +19,7 @@ jobs:
         if ('${{ github.ref }}' -match 'refs/tags/v(.+)') {
           Set-Variable -Name build_version -Value "${matches[1]}.${{ github.run_number }}"
         } else {
-          Set-Variable -Name version -Value (Get-Content -Path ./version)
+          Set-Variable -Name version -Value (Get-Content -Path ./VERSION)
           Set-Variable -Name build_version -Value "${version}.${{ github.run_number }}"
         }
         # must also set as env var for the real build
