@@ -1,4 +1,4 @@
 # release-actions
 Playground to test GH actions to automate release creation
 
-![Release status](https://github.com/jb185293/release-actions/workflows/Create%20a%20Release%20from%20tag/badge.svg)
+![master build](https://github.com/jb185293/release-actions/workflows/.github/workflows/actions.yml/badge.svg?branch=master&event=push)
