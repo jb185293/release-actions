@@ -2,10 +2,13 @@ on:
   push:
     branches:
     - master
-    - release/*
-    tags: v*
+    - release/* # Release can have any name, but for consistency we can use just the version, e.g. release/1.2.3
+    tags: v* # Expected version tag format is v1.2.3
 
 jobs:
+  # For every push we want to start by building the repo. For dev commits to master this is all that happens in the workflow, but for other cases
+  # we still need to build the thing first to have access to the artifacts.
+  # Ideally this would be a separate workflow for better reusability but that makes it hard to link dependencies between jobs and their outputs.
   build:
     runs-on: ubuntu-latest
     outputs:
@@ -13,6 +16,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    # Build version here is focused on .NET assembly versions which have 4 components unlike more common 3.
+    # For commit builds, we want to use the VERSION file as source of the build version and add workflow run number to that,
+    # but for tags we should use the number in the tag as the authoritative source.
+    # It would be better to have just one source, but most branches don't have a version in the name (master) so dev builds would
+    # have to use different versioning. On the other hand if we want lightweight releases just by tagging a commit in master,
+    # we can't force changing the VERSION file. That would result in impossibility to make releases from older commits, forcing to create
+    # a release branch and make the VERSION file change commit to it every time.
     - name: Set build number
       shell: pwsh
       run: |
@@ -25,7 +35,9 @@ jobs:
         # must also set as env var for the real build
         echo ${build_version}
         echo "::set-output name=buildVersion::${build_version}"
-      
+    
+    # Mock build just to test passing outputs and artifacts between jobs.
+    # Persistent or slow outputs like uploading artifacts can be made conditional to speed up dev builds.
     - name: Run "build"
       id: build
       run: echo "::set-output name=url::https://example.com"
@@ -43,7 +55,7 @@ jobs:
     needs: [build]
     steps:
     - uses: actions/checkout@v2
-
+      
     - name: Create a Release
       uses: actions/create-release@v1
       id: create_release
@@ -81,6 +93,7 @@ jobs:
       - name: Bump version file
         id: bump
         shell: pwsh
+        # WTB easier way to do this that also works on windows runners...
         run: |
           $v = [System.Version]::Parse($(Get-Content -Path ./VERSION))
           $v = New-Object System.Version($v.Major, ($v.Minor + 1), $v.Build)
