@@ -50,6 +50,24 @@ jobs:
         name: readme-artifact
         path: ./README-copy.md
 
+    - name: Add build summary
+      uses: octokit/request-action@v2.x
+      id: add_build_summary
+      with:
+        route: PATCH /repos/:repository/check-runs/:check_run_id
+        repository: ${{ github.repository }}
+        mediaType: | # The | is significant!
+          previews: 
+            - antiope
+        check_run_id: ${{ fromJson(steps.create_check_run.outputs.data).id }}
+        conclusion: ${{ fromJson(steps.create_check_run.outputs.data).conclusion }}
+        status: ${{ fromJson(steps.create_check_run.outputs.data).status }}
+        output: |
+          title: Build Result
+          summary: Build version: ${{ steps.build_number.outputs.buildVersion }}%0A${{ steps.build.outputs.url }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   create-release:
     if: contains(github.ref, 'refs/tags') 
     runs-on: ubuntu-latest
