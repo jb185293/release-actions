@@ -60,9 +60,9 @@ jobs:
     - name: Annotate
       uses: Attest/annotations-action@v1.0.3
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        input: './annotations.json'
-        title: 'Annotate Files'
+        secret: ${{ secrets.GITHUB_TOKEN }}
+        path: './annotations.json'
+        title: 'Annotate'
 
   create-release:
     if: contains(github.ref, 'refs/tags') 
