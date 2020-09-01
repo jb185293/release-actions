@@ -55,7 +55,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         name: Build Result
-        conclusion: ${{ job }}
+        conclusion: ${{ job.status }}
         output: |
           {"summary":"Build number: ${{ steps.build_number.outputs.build_version }}"}
 
