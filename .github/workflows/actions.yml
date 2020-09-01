@@ -49,6 +49,20 @@ jobs:
         name: readme-artifact
         path: ./README-copy.md
 
+    - name: Create annotations.json
+      run: |
+        $message = "Build number: ${build_version}\nArtifacts: ${{ steps.build.outputs.url }}"
+        $buildInfo = @{ message = $message, path = "annotations.json", level = "notice" }
+        $annotations = ConvertTo-Json @($buildInfo)
+        Set-Content "annotations.json" $annotations
+
+    - name: Annotate
+      uses: Attest/annotations-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        input: './annotations.json'
+        title: 'Annotate Files'
+
   create-release:
     if: contains(github.ref, 'refs/tags') 
     runs-on: ubuntu-latest
