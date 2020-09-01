@@ -58,7 +58,7 @@ jobs:
         Set-Content "annotations.json" $annotations
 
     - name: Annotate
-      uses: Attest/annotations-action@v1.0.3
+      uses: Attest/annotations-action@v1.0.7
       with:
         secret: ${{ secrets.GITHUB_TOKEN }}
         path: './annotations.json'
