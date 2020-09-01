@@ -65,7 +65,9 @@ jobs:
         head_sha: ${{ github.sha }}
         output: |
           title: "Build summary"
-          summary: "Build version: ${{ steps.build_number.outputs.buildVersion }}%0A${{ steps.build.outputs.url }}"
+          summary: "Build version: ${{ steps.build_number.outputs.buildVersion }}"
+          text: |
+            [Downlaod artifacts](${{ steps.build.outputs.url }})
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
