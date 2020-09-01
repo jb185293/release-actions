@@ -61,8 +61,8 @@ jobs:
             - antiope
         check_run_id: ${{ github.run_id }}
         output: |
-          title: Build Result
-          summary: Build version: ${{ steps.build_number.outputs.buildVersion }}%0A${{ steps.build.outputs.url }}
+          title: "Build Result"
+          summary: "Build version: ${{ steps.build_number.outputs.buildVersion }}%0A${{ steps.build.outputs.url }}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
