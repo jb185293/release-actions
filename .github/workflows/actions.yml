@@ -50,15 +50,6 @@ jobs:
         name: readme-artifact
         path: ./README-copy.md
 
-    - uses: LouisBrunner/checks-action@v0.1.0
-      if: always()
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        name: build
-        conclusion: ${{ job.status }}
-        annotations: |
-          [{"path":"Version","annotation_level":"notice","title":"Build number","message":"${{ steps.build_number.outputs.buildVersion }}"}]
-
   create-release:
     if: contains(github.ref, 'refs/tags') 
     runs-on: ubuntu-latest
