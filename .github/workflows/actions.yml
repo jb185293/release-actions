@@ -50,11 +50,14 @@ jobs:
         name: readme-artifact
         path: ./README-copy.md
 
-    - name: Add annotation
-      shell: pwsh
-      run: |
-        $message = "Build number: ${{ steps.build_number.outputs.build_version }}%0AArtifacts: ${{ steps.build.outputs.url }}"
-        echo '::notice file=version::${message}'
+    - uses: LouisBrunner/checks-action@v0.1.0
+      if: always()
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: Build Result
+        conclusion: ${{ job }}
+        output: |
+          {"summary":"Build number: ${{ steps.build_number.outputs.build_version }}"}
 
   create-release:
     if: contains(github.ref, 'refs/tags') 
