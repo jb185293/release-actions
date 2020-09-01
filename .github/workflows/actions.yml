@@ -50,6 +50,7 @@ jobs:
         path: ./README-copy.md
 
     - name: Create annotations.json
+      shell: pwsh
       run: |
         $message = "Build number: ${build_version}\nArtifacts: ${{ steps.build.outputs.url }}"
         $buildInfo = @{ message = $message, path = "annotations.json", level = "notice" }
