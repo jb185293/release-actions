@@ -59,9 +59,7 @@ jobs:
         mediaType: | # The | is significant!
           previews: 
             - antiope
-        check_run_id: ${{ fromJson(steps.create_check_run.outputs.data).id }}
-        conclusion: ${{ fromJson(steps.create_check_run.outputs.data).conclusion }}
-        status: ${{ fromJson(steps.create_check_run.outputs.data).status }}
+        check_run_id: ${{ github.run_id }}
         output: |
           title: Build Result
           summary: Build version: ${{ steps.build_number.outputs.buildVersion }}%0A${{ steps.build.outputs.url }}
