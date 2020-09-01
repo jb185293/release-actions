@@ -57,7 +57,9 @@ jobs:
         name: Build Result
         conclusion: ${{ job.status }}
         output: |
-          {"summary":"Build number: ${{ steps.build_number.outputs.build_version }}"}
+          {"summary":"Build number: ${{ steps.build_number.outputs.buildVersion }}"}
+        annotations: |
+          [{"path":"Version","annotation_level":"notice","title":"Build number","message":"${{ steps.build_number.outputs.buildVersion }}"}]
 
   create-release:
     if: contains(github.ref, 'refs/tags') 
