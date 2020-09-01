@@ -54,14 +54,17 @@ jobs:
       uses: octokit/request-action@v2.x
       id: add_build_summary
       with:
-        route: PATCH /repos/:repository/check-runs/:check_run_id
+        route: POST /repos/:repository/check-runs
         repository: ${{ github.repository }}
         mediaType: | # The | is significant!
           previews: 
             - antiope
-        check_run_id: ${{ github.run_id }}
+        name: "Build summary"
+        conclusion: "neutral"
+        status: "completed"
+        head_sha: ${{ github.sha }}
         output: |
-          title: "Build Result"
+          title: "Build summary"
           summary: "Build version: ${{ steps.build_number.outputs.buildVersion }}%0A${{ steps.build.outputs.url }}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
