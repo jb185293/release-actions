@@ -54,10 +54,8 @@ jobs:
       if: always()
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        name: Build Result
+        name: build
         conclusion: ${{ job.status }}
-        output: |
-          {"summary":"Build number: ${{ steps.build_number.outputs.buildVersion }}"}
         annotations: |
           [{"path":"Version","annotation_level":"notice","title":"Build number","message":"${{ steps.build_number.outputs.buildVersion }}"}]
 
