@@ -31,3 +31,5 @@ A release can be either a regular release, or a hotfix or other necessary out-of
 ## Manual Release Steps
 Even with this workflow there is manual work to be done. First and foremost the release has to be initiated somehow. This is done by a developer pushing the version tag to GH. This is enough information for the workflow to start.
 For now this workflow creates the GH Release as a draft so that the developers can review it and if needed make some changes, even dropping it completely and creating the release from another commit. Once the release is deemed ready, it has to be manually published.
+
+testing 1.19 release
