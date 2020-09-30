@@ -2,15 +2,41 @@ on:
   push:
     branches:
     - master
-    - release/* # Release can have any name, but for consistency we can use just the version, e.g. release/1.2.3
-    tags: v* # Expected version tag format is v1.2.3
+    - release/[0-9]+.[0-9]+ # major.minor e.g. 1.2
+    tags: v[0-9]+.[0-9]+.[0-9]+ # v-prefixed major.minor.patch e.g. 1.2.3
 
 jobs:
+
+  protect-tag:
+    name: Check tag protection
+    runs-on: ubuntu-latest
+    steps:
+
+    # we need to checkout the repo to do checks against git history
+    - uses: actions/checkout@v2
+      
+    - shell: pwsh
+      run: |
+        if ('${{ github.ref }}' -match 'refs/tags/v([0-9]+\.[0-9]+\.[0-9]+)') {
+          # maybe we can even check if the release version base matches the tag 
+          if ($(git branch --contains $(git rev-parse ${matches[1]})) -matches '^\* (master)|(release/[0-9]+\.[0-9]+)$)|') {
+            echo "${{ github.ref }} exists on master or a release branch"
+          }
+          else {
+            echo "${{ github.ref }} was not found on master or a release branch"
+            exit 1
+          }
+        }
+        else {
+          echo "${{ github.ref }} is not a tag - nothing to check."
+        }
+
   # For every push we want to start by building the repo. For dev commits to master this is all that happens in the workflow, but for other cases
   # we still need to build the thing first to have access to the artifacts.
   # Ideally this would be a separate workflow for better reusability but that makes it hard to link dependencies between jobs and their outputs.
   build:
     runs-on: ubuntu-latest
+    needs: [protect-tag]
     outputs:
       url: ${{ steps.build.outputs.url }}
     steps:
