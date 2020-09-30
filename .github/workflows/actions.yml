@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         ref: 'refs/heads/master'
-        fetch-depth: 0
+        fetch-depth: 0 # default value 1 does not fetch tags
       
     - shell: pwsh
       run: |
