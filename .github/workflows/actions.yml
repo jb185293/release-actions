@@ -145,7 +145,7 @@ jobs:
         # WTB easier way to do this that also works on windows runners...
         run: |
           $v = [System.Version]::Parse(${{ needs.build.outputs.build-version }})
-          $v = New-Object System.Version($v.Major, $v.Minor, 0)
+          $v = New-Object System.Version($v.Major, ($v.Minor + 1), 0)
           $v = $v.ToString()
           Set-Content -Path ./VERSION -Value $v
           echo "::set-output name=version::${v}"
