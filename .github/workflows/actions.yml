@@ -19,7 +19,7 @@ jobs:
       run: |
         if ('${{ github.ref }}' -match 'refs/tags/v([0-9]+\.[0-9]+\.[0-9]+)') {
           # maybe we can even check if the release version base matches the tag 
-          if ($(git branch --contains $(git rev-parse ${matches[1]})) -matches '^\* (master)|(release/[0-9]+\.[0-9]+)$)|') {
+          if ($(git branch --contains $(git rev-parse ${matches[1]})) -match '^\* (master)|(release/[0-9]+\.[0-9]+)$)|') {
             echo "${{ github.ref }} exists on master or a release branch"
           }
           else {
