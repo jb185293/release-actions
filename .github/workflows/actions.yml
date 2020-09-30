@@ -20,10 +20,10 @@ jobs:
     - shell: pwsh
       run: |
         if ('${{ github.ref }}' -match 'refs/tags/(v[0-9]+\.[0-9]+\.[0-9]+)') {
-          git branch --contains $(git rev-parse "${matches[1]}")
+          git branch --contains $(git rev-parse "$($matches[1])")
           # maybe we can even check if the release version base matches the tag 
-          if ($(git branch --contains $(git rev-parse "${matches[1]}")) -match '^\* (master|release/[0-9]+\.[0-9]+)$') {
-            echo "${{ github.ref }} was found on ${matches[1]}"
+          if ($(git branch --contains $(git rev-parse "$($matches[1])")) -match '^\* (master|release/[0-9]+\.[0-9]+)$') {
+            echo "${{ github.ref }} was found on $($matches[1])"
           }
           else {
             echo "${{ github.ref }} was not found on master or a release branch"
@@ -58,10 +58,10 @@ jobs:
       shell: pwsh
       run: |
         if ('${{ github.ref }}' -match 'refs/tags/v(.+)') {
-          Set-Variable -Name build_version -Value "${matches[1]}.${{ github.run_number }}"
+          Set-Variable -Name build_version -Value "$($matches[1]).${{ github.run_number }}"
         } else {
           Set-Variable -Name version -Value (Get-Content -Path ./VERSION)
-          Set-Variable -Name build_version -Value "${version}.${{ github.run_number }}"
+          Set-Variable -Name build_version -Value "$($matches[1]).${{ github.run_number }}"
         }
         # must also set as env var for the real build
         echo ${build_version}
